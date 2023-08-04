@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test: Content Moderation Simulator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      background-color: #25446B;
+      color: #F4D03E;
+    }
+
+
+    .introduction-box {
+      padding: 20px;
+      background-color: #f2f2f2;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .introduction-box h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .introduction-box p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    
+    .timer-button {
+      text-align: right;
+      padding: 5px 5px;
+      background-color: #25446B;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      display: inline-block;
+      cursor: default;
+    }
+
+    .timer {
+      text-align: right;
+      font-size: 16px;
+
+    }
+
+
+    .profile-image-container {
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      border-radius: 50%;
+    }
+
+    .profile-image-container img {
+      width: 100%;
+      height: auto;
+    }
+
+
+
+
+    .start-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .start-box h2 {
+      margin-top: 0;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .start-box button {
+      padding: 12px 24px;
+      border: none;
+      background-color: #25446B;
+      /* Updated background color */
+      color: #F4D03E;
+      /* Updated text color */
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .start-box button:hover {
+      background-color: #002F4B;
+    }
+
+    .review-tool-container {
+      max-width: 1000px;
+      margin: 20px auto;
+    }
+
+    .review-tool {
+      padding: 5px 20px;
+      background-color: #f2f2f2;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      transition: opacity 0.3s ease;
+    }
+
+    .review-item {
+      display: flex;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-item .content {
+      flex: 1;
+      width: 50%;
+      /* Set the content width to 50% */
+      padding: 10px;
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      /* Add a border to separate the content */
+    }
+
+    .review-item img {
+      width: 200px;
+      height: 200px;
+      margin-right: 20px;
+      align-self: center;
+    }
+
+    .image-container {
+      /* Set the constant size for the image container */
+      width: 200px;
+      max-height: 400px;
+      overflow: hidden; /* Ensure that the image doesn't overflow the container */
+      align-items: center; /* Center the image vertically */
+      justify-content: center; /* Center the image horizontally */
+
+    }
+
+    .review-image {
+      /* Make the image fill the container while maintaining aspect ratio */
+      margin: 20px 5px 20px 5px; /* Add margin around the image container (top right bottom left) */
+      width: 100%;
+      height: 100%;
+      object-fit: scale-down;
+      
+    }
+
+
+    .info-container {
+      flex: 1;
+      width: 160px;
+      margin-right: 20px;
+      /* Set the info container width to 50% minus the image width and margin */
+      padding-left: 20px;
+    }
+
+    .poster-info,
+    .report-info {
+      font-size: 12px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      margin-bottom: 10px;
+      height: 40%;
+    }
+
+    .poster-info h3,
+    .report-info h3 {
+      margin-top: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .poster-info ul,
+    .report-info ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+
+    .poster-info ul li,
+    .report-info ul li {
+      margin-bottom: 10px;
+    }
+
+    .answer-buttons {
+      margin-left: 20px;
+    }
+
+    .review-decisions {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .review-decisions button {
+      display: block;
+      padding: 8px 16px;
+      width: 100%;
+      border: none;
+      background-color: #25446B;
+      /* Updated background color */
+      color: #F4D03E;
+      /* Updated text color */
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .review-decisions button:hover {
+      background-color: #002F4B;
+    }
+
+    .review-decisions button.highlight {
+      background-color: #007bff;
+    }
+
+    .next-button {
+      text-align: right;
+      margin-top: 2px;
+    }
+
+    .next-button button {
+      padding: 12px 48px;
+      border: none;
+      background-color: #25446B;
+      /* Updated background color */
+      color: #F4D03E;
+      /* Updated text color */
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .next-button button:hover {
+      background-color: #002F4B;
+    }
+
+    .review-summary {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+
+    .review-summary h3 {
+      margin: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .review-summary p {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .review-summary ul li {
+      list-style: none;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .review-summary .review-item {
+      display: flex;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-summary .review-item img {
+      max-width: 200px;
+      max-height: 200px;
+      margin-right: 20px;
+      align-self: center;
+    }
+
+
+
+    .review-summary .poster-report-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .review-summary .poster-info,
+    .review-summary .report-info {
+      flex: 1;
+      font-size: 12px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      margin-left: 20px;
+      height: 40%;
+    }
+
+    .review-summary .poster-info h3,
+    .review-summary .report-info h3 {
+      margin-top: 0;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .review-summary .answer-box {
+      width: 160px;
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+
+    .review-summary .answer-box.correct-answer {
+      background-color: #EBFFEB;
+    }
+
+    .review-summary .answer-box.incorrect-answer {
+      background-color: #FFEBEC;
+    }
+
+    .review-summary .answer-check {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .review-summary .answer-check.correct-answer {
+      color: #28a745;
+    }
+
+    .review-summary .answer-check.incorrect-answer {
+      color: #dc3545;
+    }
+
+    .review-summary .explanation {
+      color: #000000;
+    }
+
+    .review-summary .content-poster-report {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .review-summary .content-poster-report .poster-info,
+    .review-summary .content-poster-report .report-info {
+      flex: 1;
+    }
+
+    .review-tool.fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    /* New style for fading in the review item */
+    .review-tool.fade-in {
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="header-container">
+    <h1 style="text-align: center;">Content Moderation Review Tool</h1>
+    <button class="timer-button" id="timerButton">
+      <h2 class="timer" id="timer">00:00:00</h2>
+    </button>
+  </div>
+  <div class="start-box" id="startBox">
+    <div class="introduction-box">
+      <br>
+      <h2>Welcome to the Content Moderation Review Tool</h2>
+      <p>
+        This tool allows you to review and moderate various types of content. Your task is to review the provided items and select the appropriate action based on the content's context. Please select the most suitable option from the list of actions provided.
+      </p>
+      <p>
+        Many real images of policy violations cannot be shared even in an educational context, due to legal and ethical reasons or because the content is unnecessarily disturbing or upsetting. Some of the review items use stock photos or public domain images, and others use descriptions of image or video content. Please review this content as if it were real / as described.
+      </p>
+
+      <p style="font-size: 14px; color: #dc3545; margin-top: 10px;">
+        <strong>Notice:</strong> Due to the nature of content policy, this tool contains references to potentially sensitive or offensive topics.
+      </p>
+          <br>
+    </div>
+    <button onclick="startReview()">Start Reviewing</button>
+  </div>
+    <div class="review-tool-container" id="reviewContainer" style="display: none;">
+    <div class="review-tool" id="reviewTool">
+
+      <div class="review-item">
+
+        <div class="image-container"> <!-- New div for the image container -->
+
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/David_von_Michelangelo.jpg/640px-David_von_Michelangelo.jpg"
+          alt="Review Item Image" id="reviewImage" class="review-image">
+        </div>
+
+        <div class="content">
+          <p id="reviewContent">This is an example review item. Please review the content and take appropriate action:
+          </p>
+        </div>
+        <div class="info-container" id="infoContainer">
+          <div class="poster-info" id="posterInfo">
+            <h3>Content Poster Information</h3>
+            <ul>
+              <li><strong>Name:</strong> <span id="posterName">John Doe</span></li>
+              <li><strong>Email:</strong> <span id="posterEmail">john@example.com</span></li>
+              <li><strong>Location:</strong> <span id="posterLocation">New York, USA</span></li>
+              <li><strong>Registered:</strong> <span id="posterRegistered">January 1, 2023</span></li>
+            </ul>
+          </div>
+          <div class="report-info" id="reportInfo">
+            <h3>Report Information</h3>
+            <ul>
+              <li><strong>Date of Report:</strong> <span id="reportDate">June 24, 2023</span></li>
+              <li><strong>Reason for Report:</strong> <span id="reportReason">Inappropriate content</span></li>
+              <li><strong>Reporter Name:</strong> <span id="reporterName">Jane Smith</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="answer-buttons">
+          <div class="review-decisions">
+            <button onclick="highlightAnswer(this, 'Escalate')">Escalate</button>
+            <button onclick="highlightAnswer(this, 'Ban')">Ban</button>
+            <button onclick="highlightAnswer(this, 'Block')">Block</button>
+            <button onclick="highlightAnswer(this, 'Delete')">Delete</button>
+            <button onclick="highlightAnswer(this, 'Warning')">Warning</button>
+            <button onclick="highlightAnswer(this, 'No Action')">No Action</button>
+          </div>
+        </div>
+      </div>
+      <div class="next-button">
+        <button onclick="nextReview()" id="nextButton">Next</button>
+      </div>
+    </div>
+    <div class="review-summary" id="reviewSummary" style="display: none;">
+      <h3>Review Summary</h3>
+      <h4 class="timer" id="summaryTimer"></h4>
+      <h2 style="text-align: center;">Your Score: <span id="fractionCorrect"></span> (<span id="percentageCorrect"></span>)</h3>
+      <br>
+      <div id="summaryList"></div>
+    </div>
+    <script>// <![CDATA[
+      var reviewIndex = 0;
+      var reviewData = [
+        {
+          reviewContent: `
+          <h3>Image Review</h3>
+          <p><i>Review this image to see if it violates policy</i></p>
+          `,
+          posterName: "John Doe",
+          posterEmail: "john@example.com",
+          posterLocation: "New York, USA",
+          posterRegistered: "January 1, 2023",
+          reportDate: "June 24, 2023",
+          reportReason: "Nudity",
+          reporterName: "Jane Smith",
+          reviewImageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/David_von_Michelangelo.jpg/640px-David_von_Michelangelo.jpg",
+          correctAnswer: "No Action",
+          explanation: "The statue in this image is of a nude male. However, there is clear artistic context and no graphic sexual elements. No action is needed."
+        },
+        {
+          reviewContent: `
+          <h3>Post Review</h3>
+          <h5 style="margin-bottom: 5px;">Post text</h5>
+          <div class="post-text-box" style="background-color: #f0f7ff; border: 1px solid #99c2ff; padding: 10px; border-radius: 5px;">
+            <p>I love martial arts!</p>
+          </div>
+          `,
+          posterName: "John Doe",
+          posterEmail: "john@example.com",
+          posterLocation: "New York, USA",
+          posterRegistered: "January 1, 2023",
+          reportDate: "June 24, 2023",
+          reportReason: "Violence",
+          reporterName: "Jane Smith",
+          reviewImageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Haraigoshi.jpg/640px-Haraigoshi.jpg",
+          correctAnswer: "No Action",
+          explanation: "This review item includes violence, but in a competitive martial arts context. The post contains no graphic injuries or other disturbing elements. No action is needed."
+        },
+        {
+          
+          reviewContent: `
+            <h3>Post Review</h3>
+            <h5 style="margin-bottom: 5px;">Post text</h5>
+            <div class="post-text-box" style="background-color: #f0f7ff; border: 1px solid #99c2ff; padding: 10px; border-radius: 5px;">
+              <p>Going to introduce my former boss to my new friend here - #payback</p>
+            </div>
+          `,
+          posterName: "Jane Smith",
+          posterEmail: "jane@example.com",
+          posterLocation: "Los Angeles, USA",
+          posterRegistered: "February 15, 2023",
+          reportDate: "June 25, 2023",
+          reportReason: "Violence",
+          reporterName: "John Doe",
+          reviewImageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/First-year_H%26K_USP_9mm_%2832415150000%29_modified.jpg/640px-First-year_H%26K_USP_9mm_%2832415150000%29_modified.jpg",
+          correctAnswer: "Escalate",
+          explanation: "The combination of an image of a weapon and the post text form a clear implied threat, and the text also suggest that threat may be imminent. This threat takes priority over the presence of regulated goods (firearms). This requires escalation"
+        },
+        {
+          reviewContent: `
+            <h3>Post Review</h3>
+            <h5 style="margin-bottom: 5px;">Image description</h5>
+            <div class="image-description-box" style="background-color: #ffe6cc; border: 1px solid #ffcc99; padding: 10px; border-radius: 5px;">
+              <p>An image of a person with bleeding cuts on their arms that appear to be self inflicted.</p>
+            </div>
+            <h5 style="margin-bottom: 5px;">Post text</h5>
+            <div class="post-text-box" style="background-color: #f0f7ff; border: 1px solid #99c2ff; padding: 10px; border-radius: 5px;">
+              <p>having a bad day :(</p>
+            </div>
+          `,
+          posterName: "Jane Smith",
+          posterEmail: "jane@example.com",
+          posterLocation: "Los Angeles, USA",
+          posterRegistered: "February 15, 2023",
+          reportDate: "June 25, 2023",
+          reportReason: "Self harm",
+          reporterName: "John Doe",
+          reviewImageURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Red-x-icon-white-background.png/640px-Red-x-icon-white-background.png",
+          correctAnswer: "Warning",
+          explanation: "This post shows evidence of recent self harm, both from the condition of the injuries and the text implying they were recent. Deleting or Banning may limit opportunity for intervention, but the content should be hidden by a warning."
+        }
+      ];
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
+      shuffleArray(reviewData);
+
+
+      var answerButtons = document.querySelectorAll(".review-decisions button");
+      var selectedAnswers = [];
+      var selectedItems = [];
+      var startTime = null;
+      var reviewTimer = null;
+
+      function startReview() {
+        document.getElementById("startBox").style.display = "none";
+        document.getElementById("reviewContainer").style.display = "block";
+        showReviewItem();
+        startTimer();
+      }
+
+      function showReviewItem() {
+        var reviewItem = reviewData[reviewIndex];
+        document.getElementById("reviewContent").innerHTML = reviewItem.reviewContent;
+        document.getElementById("posterName").textContent = reviewItem.posterName;
+        document.getElementById("posterEmail").textContent = reviewItem.posterEmail;
+        document.getElementById("posterLocation").textContent = reviewItem.posterLocation;
+        document.getElementById("posterRegistered").textContent = reviewItem.posterRegistered;
+        document.getElementById("reportDate").textContent = reviewItem.reportDate;
+        document.getElementById("reportReason").textContent = reviewItem.reportReason;
+        document.getElementById("reporterName").textContent = reviewItem.reporterName;
+        document.getElementById("reviewImage").src = reviewItem.reviewImageURL;
+        resetAnswerButtons();
+      }
+
+      function resetAnswerButtons() {
+        for (var i = 0; i < answerButtons.length; i++) {
+          answerButtons[i].classList.remove("highlight");
+        }
+      }
+
+      function highlightAnswer(button, answer) {
+        resetAnswerButtons();
+        button.classList.add("highlight");
+        selectedAnswers[reviewIndex] = answer;
+        selectedItems[reviewIndex] = button.parentElement.parentElement.parentElement.querySelector("p").textContent;
+      }
+
+      function startTimer() {
+        startTime = Date.now();
+        reviewTimer = setInterval(updateTimer, 1000);
+      }
+
+      function updateTimer() {
+        var currentTime = Date.now();
+        var elapsedTime = currentTime - startTime;
+        var hours = Math.floor(elapsedTime / (1000 * 60 * 60));
+        var minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+        document.getElementById("timer").textContent = formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+      }
+
+      function formatTime(time) {
+        return time.toString().padStart(2, "0");
+      }
+
+      function stopTimer() {
+        clearInterval(reviewTimer);
+      }
+
+            function fadeOutReviewItem() {
+            var reviewTool = document.getElementById("reviewTool");
+            reviewTool.classList.add("fade-out");
+            setTimeout(function () {
+              reviewTool.style.display = "none";
+              reviewTool.classList.remove("fade-out");
+            }, 500);
+          }
+
+      function fadeInReviewItem() {
+        var reviewTool = document.getElementById("reviewTool");
+        reviewTool.classList.add("fade-in");
+        reviewTool.style.display = "block";
+        setTimeout(function () {
+          reviewTool.classList.remove("fade-in");
+        }, 500);
+      }
+
+      function nextReview() {
+        if (selectedAnswers[reviewIndex]) {
+          if (reviewIndex < reviewData.length - 1) {
+            fadeOutReviewItem(); // Fade out the current review item
+            reviewIndex++;
+            setTimeout(function () {
+              showReviewItem(); // Show the next review item after 2 seconds
+              fadeInReviewItem(); // Fade in the new review item
+            }, 500);
+          } else {
+            stopTimer();
+            showReviewSummary();
+          }
+        } else {
+          alert("Please select an answer before proceeding.");
+        }
+      }
+
+      function showReviewSummary() {
+        document.getElementById("reviewTool").style.display = "none";
+        document.getElementById("reviewSummary").style.display = "block";
+        displayReviewSummary();
+      }
+
+      function displayReviewSummary() {
+        var summaryList = document.getElementById("summaryList");
+        summaryList.innerHTML = "";
+        var correctAnswers = 0;
+        for (var i = 0; i < reviewData.length; i++) {
+          var reviewItem = reviewData[i];
+          var listItem = document.createElement("div");
+          listItem.className = "review-item";
+          listItem.innerHTML = `
+          <div class="image-container"> <!-- New div for the image container -->
+            <img src="${reviewItem.reviewImageURL}" alt="Review Item Image" class="review-image">
+            </div>
+
+
+            <div class="content">
+                <p>${reviewItem.reviewContent}</p>
+              </div>
+
+          <div class="info-container" id="infoContainer">
+          <div class="poster-info" id="posterInfo">
+            <h3>Content Poster Information</h3>
+            <ul>
+              <li><strong>Name:</strong> ${reviewItem.posterName}</li>
+              <li><strong>Email:</strong> ${reviewItem.posterEmail}</li>
+              <li><strong>Location:</strong> ${reviewItem.posterLocation}</li>
+              <li><strong>Registered:</strong> ${reviewItem.posterRegistered}</li>
+            </ul>
+          </div>
+          <div class="report-info" id="reportInfo">
+            <h3>Report Information</h3>
+            <ul>
+              <li><strong>Date of Report:</strong> ${reviewItem.reportDate}</li>
+              <li><strong>Reason for Report:</strong> ${reviewItem.reportReason}</li>
+              <li><strong>Reporter Name:</strong> ${reviewItem.reporterName}</li>
+            </ul>
+          </div>
+        </div>
+
+
+            <div class="answer-box ${selectedAnswers[i] === reviewItem.correctAnswer ? 'correct-answer' : 'incorrect-answer'}">
+              <h4 class="answer-check ${selectedAnswers[i] === reviewItem.correctAnswer ? 'correct-answer' : 'incorrect-answer'}">
+                ${selectedAnswers[i] === reviewItem.correctAnswer ? '&#10004;' : '&#10008;'}
+              </h4>
+              <p><b>Correct Answer: ${reviewItem.correctAnswer}</b></p>
+              <br>
+              <p>${reviewItem.explanation}</p>
+            </div>
+          `;
+          summaryList.appendChild(listItem);
+          if (selectedAnswers[i] === reviewItem.correctAnswer) {
+            correctAnswers++;
+          }
+        }
+        var fractionCorrect = document.getElementById("fractionCorrect");
+        fractionCorrect.textContent = correctAnswers + "/" + reviewData.length;
+        var percentageCorrect = document.getElementById("percentageCorrect");
+        percentageCorrect.textContent = Math.round((correctAnswers / reviewData.length) * 100) + "%";
+        var summaryTimer = document.getElementById("summaryTimer");
+        summaryTimer.textContent = "Total Time: " + document.getElementById("timer").textContent;
+      }
+// ]]></script>
+  </div>
+</body>
+
+</html>
